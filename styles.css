@@ -13,4 +13,21 @@ body {
     margin: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    text-align: center;
+}
+
+.circle {
+    background-color: #87CEEB; /* Light Blue */
+}
+
+.square {
+    background-color: #98FB98; /* Pale Green */
+}
+
+.hex {
+    background-color: #FFD700; /* Gold */
+}
+
+.star {
+    background-color: #FFA07A; /* Light Salmon */
 }
