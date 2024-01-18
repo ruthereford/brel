@@ -62,6 +62,10 @@ function getImagePath(shape) {
 
 // Function to handle shape selection by the user
 function selectShape(selectedShape) {
+    // Reset user-selected sequence if more than 8 shapes are clicked
+    if (userSelectedShapes.length >= 8) {
+        userSelectedShapes = [];
+    }
     // Update userSelectedShapes array with the selected shape
     userSelectedShapes.push(selectedShape);
 
@@ -101,15 +105,26 @@ function displayUserSequence() {
     const userSequenceContainer = document.getElementById("userSequenceContainer");
     userSequenceContainer.innerHTML = ''; // Clear previous user sequence
 
-    for (const shape of userSelectedShapes) {
+    for (let i = 0; i < userSelectedShapes.length; i++) {
         const shapeImg = document.createElement("img");
-        shapeImg.src = getImagePath(shape);
-        shapeImg.alt = `Shape ${shape}`;
+        shapeImg.src = getImagePath(userSelectedShapes[i]);
+        shapeImg.alt = `Shape ${userSelectedShapes[i]}`;
         shapeImg.classList.add("shape");
-        shapeImg.setAttribute("data-shape", shape);
+        shapeImg.setAttribute("data-shape", userSelectedShapes[i]);
+
+        // Add a click event to remove the shape from userSelectedShapes
+        shapeImg.onclick = () => removeShapeFromSequence(i);
+
         userSequenceContainer.appendChild(shapeImg);
     }
 }
+
+// Function to remove a shape from userSelectedShapes
+function removeShapeFromSequence(index) {
+    userSelectedShapes.splice(index, 1);
+    displayUserSequence();
+}
+
 
 // Function to confirm the selected shapes and compare with the sequence to guess
 function confirmSelection() {
