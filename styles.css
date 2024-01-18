@@ -2,32 +2,40 @@ body {
     font-family: Arial, sans-serif;
 }
 
-#sequenceContainer {
+#shapeContainer {
     display: flex;
     flex-wrap: wrap;
 }
 
 .shape {
     cursor: pointer;
-    padding: 10px;
     margin: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: center;
 }
 
+/* Additional styling for each shape */
 .circle {
-    background-color: #87CEEB; /* Light Blue */
+    width: 50px;
+    height: 50px;
 }
 
 .square {
-    background-color: #98FB98; /* Pale Green */
+    width: 50px;
+    height: 50px;
 }
 
 .hex {
-    background-color: #FFD700; /* Gold */
+    width: 50px;
+    height: 50px;
 }
 
 .star {
-    background-color: #FFA07A; /* Light Salmon */
+    width: 50px;
+    height: 50px;
+}
+
+/* Additional styling for user-uploaded shape */
+.user {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #FFA07A; /* Light Salmon */
 }
