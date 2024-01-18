@@ -1,3 +1,5 @@
+let sequenceToGuess = [];
+let userSelectedShapes = [];
 let allSequences = [
     [1, 3, 3, 0, 2, 0, 1, 2],
     [1, 3, 3, 2, 1, 0, 2, 0],
@@ -7,20 +9,19 @@ let allSequences = [
     [1, 0, 2, 3, 3, 2, 1, 0]
 ];
 
-let sequenceToGuess = [];
-let userSelectedShapes = [];
+// Function to start the game
+function startGame() {
+    initializeGame();
+}
 
-// Function to generate a random sequence of three shapes from the provided sequences
-function generateRandomSequence(length) {
-    const shapes = [0, 1, 2, 3]; // Assuming 0 represents circle, 1 represents square, 2 represents hex, and 3 represents star
-    const randomSequence = [];
-    
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * shapes.length);
-        randomSequence.push(shapes[randomIndex]);
-    }
+function initializeGame() {
+    // Choose a random sequence from the provided correct sequences
+    const randomSequenceIndex = Math.floor(Math.random() * allSequences.length);
+    sequenceToGuess = allSequences[randomSequenceIndex].slice(0, 3); // Show the first 3 shapes
+    displayShapes(sequenceToGuess);
 
-    return randomSequence;
+    // Hide the "Start Game" button
+    document.getElementById("startButton").style.display = "none";
 }
 
 // Function to display shapes based on a given sequence
@@ -42,51 +43,60 @@ function displayShapes(sequence) {
 // Function to get the image path based on the shape
 function getImagePath(shape) {
     const shapeImages = {
-        0: "images/circle.png",
-        1: "images/square.png",
-        2: "images/hex.png",
-        3: "images/star.png"
+        0: "images/circle.jpg",
+        1: "images/square.jpg",
+        2: "images/hexagon.jpg",
+        3: "images/star.jpg"
     };
 
     return shapeImages[shape];
 }
 
-// Function to handle image upload
-function handleImageUpload() {
-    const imageInput = document.getElementById("imageInput");
-    const shapeContainer = document.getElementById("shapeContainer");
-
-    const selectedImage = imageInput.files[0];
-    if (selectedImage) {
-        const imageUrl = URL.createObjectURL(selectedImage);
-
-        const shapeImg = document.createElement("img");
-        shapeImg.src = imageUrl;
-        shapeImg.alt = "User Shape";
-        shapeImg.classList.add("shape", "user");
-        shapeImg.onclick = () => selectShape("user");
-        shapeContainer.appendChild(shapeImg);
-
-        // Add the user-uploaded shape to the comparison list
-        userSelectedShapes.push("user");
-    }
-}
 
 // Function to handle shape selection by the user
 function selectShape(selectedShape) {
+    // Update userSelectedShapes array with the selected shape
     userSelectedShapes.push(selectedShape);
+
+    // Display the selected shape text
+    const selectedShapeText = document.getElementById("selectedShapeText");
+    selectedShapeText.textContent = `Selected Shape: ${getShapeName(selectedShape)}`;
 
     if (userSelectedShapes.length === sequenceToGuess.length) {
         const isCorrect = arraysEqual(userSelectedShapes, sequenceToGuess);
-        
+
         if (isCorrect) {
-            alert("Correct Sequence! You can proceed to the next level.");
-            initializeGame();
+            if (userSelectedShapes.length === 8) {
+                alert("Congratulations! You completed the sequence. Starting a new round.");
+                initializeGame(); // Start a new round
+            } else {
+                alert("Correct! Keep guessing the next shape.");
+                sequenceToGuess.push(allSequences[randomSequenceIndex][userSelectedShapes.length]);
+                displayShapes(sequenceToGuess);
+                userSelectedShapes = [];
+                // Clear the selected shape text after the correct guess
+                selectedShapeText.textContent = '';
+            }
         } else {
             alert("Incorrect Sequence. Please try again.");
             userSelectedShapes = [];
+            // Clear the selected shape text after an incorrect guess
+            selectedShapeText.textContent = '';
         }
     }
+}
+
+
+// Function to get the name of the shape
+function getShapeName(shape) {
+    const shapeNames = {
+        0: "Circle",
+        1: "Square",
+        2: "Hexagon",
+        3: "Star"
+    };
+
+    return shapeNames[shape];
 }
 
 // Function to clear displayed shapes
