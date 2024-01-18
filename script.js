@@ -38,7 +38,14 @@ function displayShapes(sequence) {
         shapeImg.onclick = () => selectShape(shape);
         shapeContainer.appendChild(shapeImg);
     }
-}
+
+        // Add a "Confirm" button
+        // const confirmBtn = document.createElement("button");
+        // confirmBtn.textContent = "Confirm";
+        // confirmBtn.onclick = confirmSelection;
+        // shapeContainer.appendChild(confirmBtn);
+    }
+
 
 // Function to get the image path based on the shape
 function getImagePath(shape) {
@@ -62,6 +69,9 @@ function selectShape(selectedShape) {
     const selectedShapeText = document.getElementById("selectedShapeText");
     selectedShapeText.textContent = `Selected Shape: ${getShapeName(selectedShape)}`;
 
+    // Display the user-selected sequence
+    displayUserSequence();
+
     if (userSelectedShapes.length === sequenceToGuess.length) {
         const isCorrect = arraysEqual(userSelectedShapes, sequenceToGuess);
 
@@ -83,6 +93,45 @@ function selectShape(selectedShape) {
             // Clear the selected shape text after an incorrect guess
             selectedShapeText.textContent = '';
         }
+    }
+}
+
+// Function to display the user-selected sequence
+function displayUserSequence() {
+    const userSequenceContainer = document.getElementById("userSequenceContainer");
+    userSequenceContainer.innerHTML = ''; // Clear previous user sequence
+
+    for (const shape of userSelectedShapes) {
+        const shapeImg = document.createElement("img");
+        shapeImg.src = getImagePath(shape);
+        shapeImg.alt = `Shape ${shape}`;
+        shapeImg.classList.add("shape");
+        shapeImg.setAttribute("data-shape", shape);
+        userSequenceContainer.appendChild(shapeImg);
+    }
+}
+
+// Function to confirm the selected shapes and compare with the sequence to guess
+function confirmSelection() {
+    if (userSelectedShapes.length === sequenceToGuess.length) {
+        const isCorrect = arraysEqual(userSelectedShapes, sequenceToGuess);
+
+        if (isCorrect) {
+            if (userSelectedShapes.length === 8) {
+                alert("Congratulations! You completed the sequence. Starting a new round.");
+                initializeGame(); // Start a new round
+            } else {
+                alert("Correct! Keep guessing the next shape.");
+                sequenceToGuess.push(allSequences[randomSequenceIndex][userSelectedShapes.length]);
+                displayShapes(sequenceToGuess);
+                userSelectedShapes = [];
+            }
+        } else {
+            alert("Incorrect Sequence. Please try again.");
+            userSelectedShapes = [];
+        }
+    } else {
+        alert("Please select the entire sequence before confirming.");
     }
 }
 
